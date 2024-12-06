@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico de Preços</title>
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+    crossorigin="anonymous"
+/>
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"
+></script>
+</head>
+<body>
+    {% extends 'base.html' %}
+    {% block title %}Histórico de Preços{% endblock %}
+    {% block content %}
+    <div class="container-fluid">
+        <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            Informações sobre o Produto
+        </div>
+        <div class="card-body">
+            <h2 class="card-title">{{product.nameprod}}</h2>
+            <p><strong>Código:</strong>{{product.codprod}}</p>
+            <p><strong>Marca:</strong>{{product.brandprod}}</p>
+            <p><strong>Data de Fabricação:</strong>{{product.manudateprod}}</p>
+        </div>
+        </div>
+        <div class="card">
+            <div class="card-header bg-secundary text-white">
+                Histórico de preços
+            </div>
+            <div class="card-body">
+                {% if price_history %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Preço</th>
+                            <th>Data de Verificação</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for price in price_history %}
+                        <tr>
+                            <td>R$ {{ price.priceprod|floatformat:2 }}</td>
+                            <td>{{ price.dateverify}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p>
+                    Nenhum histórico de preços foi encontrado para este produto
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>

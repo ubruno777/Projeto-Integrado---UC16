@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gráfico</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous"
+        />
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"
+        ></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <h1>Gráfico de preços - {{ product.nameprod }}</h1>
+            <div>
+                <canvas id="myChart"></canvas>
+            </div>
+            <script>
+                // Carregando os dados do backend
+                const chartdata = JSON.parse('{{ chartdata|escapejs }}');
+
+                const ctx = document.getElementById("myChart");
+
+                // Configurando e exibindo o gráfico
+                new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: chartdata.dates, // Eixo X (datas)
+                        datasets: [
+                            {
+                                label: "Preços",
+                                data: chartdata.prices, // Eixo Y (preços)
+                                borderColor: "rgba(75, 192, 192, 1)",
+                                borderWidth: 2,
+                                tension: 0.1,
+                                fill: false,
+                            },
+                        ],
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: "top",
+                            },
+                            tooltip: {
+                                enabled: true,
+                            },
+                        },
+                        scales: {
+                            x: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: "Data",
+                                },
+                            },
+                            y: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: "Preço (R$)",
+                                },
+                                beginAtZero: false,
+                            },
+                        },
+                    },
+                });
+            </script>
+        </div>
+    </body>
+</html>
