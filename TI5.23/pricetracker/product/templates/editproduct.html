@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Editar Produto{% endblock %}
+{% block content %}
+<h2>Editar Produto</h2>
+<form method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="nameprod" class="form-label">Nome do Produto</label>
+        <input type="text" class="form-control" id="nameprod" name="nameprod" value="{{ product.nameprod }}">
+    </div>
+    <div class="mb-3">
+        <label for="categoryprod" class="form-label">Categoria</label>
+        <input type="text" class="form-control" id="categoryprod" name="categoryprod" value="{{ product.categoryprod }}">
+    </div>
+    <div class="mb-3">
+        <label for="descprod" class="form-label">Descrição</label>
+        <textarea class="form-control" id="descprod" name="descprod">{{ product.descprod }}</textarea>
+    </div>
+    <div class="mb-3">
+        <label for="brandprod" class="form-label">Marca</label>
+        <input type="text" class="form-control" id="brandprod" name="brandprod" value="{{ product.brandprod }}">
+    </div>
+    <div class="mb-3">
+        <label for="manudateprod" class="form-label">Data de Fabricação</label>
+        <input type="date" class="form-control" id="manudateprod" name="manudateprod" value="{{ product.manudateprod }}">
+    </div>
+    <div class="mb-3">
+        <label for="weightprod" class="form-label">Peso</label>
+        <input type="number" step="0.01" class="form-control" id="weightprod" name="weightprod" value="{{ product.weightprod }}">
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <a href="{% url 'productlist' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

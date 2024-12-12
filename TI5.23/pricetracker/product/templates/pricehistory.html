@@ -43,7 +43,6 @@
                         <tr>
                             <th>Preço</th>
                             <th>Data de Verificação</th>
-                            
                         </tr>
                     </thead>
                     <tbody>
@@ -51,6 +50,12 @@
                         <tr>
                             <td>R$ {{ price.priceprod|floatformat:2 }}</td>
                             <td>{{ price.dateverify}}</td>
+                            <td>
+                                <!-- Botão Editar -->
+                                <a href="{% url 'editprice' price.codprice %}">Editar</a>
+                                
+                                <!-- Botão Excluir -->
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>

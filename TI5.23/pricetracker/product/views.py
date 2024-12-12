@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import PriceProd, Product
 from django.http import JsonResponse
+from .forms import PriceProdForm
 
 
 def saveprod(request):
@@ -41,17 +42,13 @@ def saveprice(request):
     return render(request, "cadprice.html", {"products": products})
 
 
-def historyprice(request, codprod):
-
-    product_ = get_object_or_404(Product, pk=codprod)
-
-    price_history_ = PriceProd.objects.filter(codprod=product_).order_by("-dateverify")
-
-    return render(
-        request,
-        "pricehistory.html",
-        {"product": product_, "price_history": price_history_},
-    )
+def historyprice(request, product_id):
+    product = get_object_or_404(Product, codprod=product_id)
+    price_history = PriceProd.objects.filter(codprod=product).order_by("-dateverify")
+    return render(request, 'pricehistory.html', {
+        'product': product,
+        'price_history': price_history
+    })
     
 def productlist(request):
     
@@ -72,3 +69,51 @@ def pricechart(request, codprod):
         'product': product_,
         'chartdata': JsonResponse({'dates': dates_, 'prices': prices_}).content.decode('utf-8'),
     })
+
+def editproduct(request, codprod):
+    product = get_object_or_404(Product, pk=codprod)
+    
+    if request.method == "POST":
+        product.nameprod = request.POST.get("nameprod")
+        product.categoryprod = request.POST.get("categoryprod")
+        product.descprod = request.POST.get("descprod")
+        product.brandprod = request.POST.get("brandprod")
+        product.manudateprod = request.POST.get("manudateprod")
+        product.weightprod = float(request.POST.get("weightprod"))
+        product.save()
+        return redirect("productlist")
+    
+    return render(request, "editproduct.html", {"product": product})
+
+def deleteproduct(request, codprod):
+    product = get_object_or_404(Product, pk=codprod)
+    product.delete()
+    return redirect("productlist")
+
+def alterar(request, codprice):
+    # Recupera a instância de PriceProd pelo ID
+    price_instance = get_object_or_404(PriceProd, codprice=codprice)
+ 
+    if request.method == 'POST':
+        # Cria uma instância do formulário com os dados do POST e a instância de preço
+        form = PriceProdForm(request.POST, instance=price_instance)
+        if form.is_valid():
+            # Salva as alterações no banco de dados
+            form.save()
+            # Redireciona para o histórico de preços do produto relacionado
+            return redirect('historyprice', codprod=price_instance.codprod.codprod)
+    else:
+        # Se o método for GET, exibe o formulário com os dados atuais do preço
+        form = PriceProdForm(instance=price_instance)
+ 
+    # Renderiza o template com o formulário
+    return render(request, 'alterar.html', {'form': form})
+ 
+ 
+def deleteprice(request, codprice):
+ 
+    history_ = get_object_or_404(PriceProd, codprice=codprice)
+    prod_ = history_.codprod
+    history_.delete()
+ 
+    return redirect('historyprice', prod_.codprod)
